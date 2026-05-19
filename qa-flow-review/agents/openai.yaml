@@ -1,0 +1,7 @@
+interface:
+  display_name: "QA Flow Review"
+  short_description: "Analyze code changes and retest end-to-end flows."
+  default_prompt: "Use $qa-flow-review to analyze my completed code changes, identify impacted flows, run practical verification where possible, and report missed bugs or regression risks."
+
+policy:
+  allow_implicit_invocation: true

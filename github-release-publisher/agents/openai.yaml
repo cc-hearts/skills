@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Release Publisher"
+  short_description: "Draft GitHub releases from repo changes"
+  default_prompt: "Use $github-release-publisher to prepare a GitHub Release draft for this repository."
