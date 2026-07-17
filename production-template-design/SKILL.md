@@ -1,6 +1,6 @@
 ---
 name: production-template-design
-description: Design, implement, refine, and verify production-grade web product templates, especially SaaS and AI interfaces with interactive product demos, shadcn-compatible semantic tokens, responsive behavior, and light/dark themes. Use when creating a starter template, production template, AI chat landing page, product-first marketing page, application shell, or when upgrading an existing template that looks generic, flat, inconsistent, or unfinished.
+description: Design, implement, refine, and verify production-grade web product templates, feature prototypes, SaaS and AI interfaces with interactive flows, shadcn-compatible semantic tokens, responsive behavior, and light/dark themes. Use when creating a starter template, product prototype, AI chat landing page, product-first marketing page, application shell, or when upgrading an existing template that looks generic, flat, inconsistent, or unfinished.
 ---
 
 # Production Template Design
@@ -14,6 +14,7 @@ The default outcome is a polished, runnable interface with meaningful interactio
 Load only what the task needs:
 
 - New project or major page: read [references/discovery.md](references/discovery.md), [references/workflow.md](references/workflow.md), and [references/visual-system.md](references/visual-system.md).
+- Feature or app-flow prototype: also read [references/prototype-mode.md](references/prototype-mode.md).
 - Existing design refinement: read [references/redesign-audit.md](references/redesign-audit.md) and the relevant parts of [references/visual-system.md](references/visual-system.md).
 - Before delivery: always read [references/review-checklist.md](references/review-checklist.md).
 - For a shadcn-style project with no existing token file, use [assets/shadcn-zinc.css](assets/shadcn-zinc.css) as a starting point, then adapt it to the project.
@@ -67,7 +68,17 @@ A useful thesis is specific enough to reject weak choices. Example:
 
 > Product is the evidence: let visitors operate the AI workspace instead of decorating the page with abstract AI imagery.
 
-### 3. Build the System Before Sections
+### 3. Choose the Delivery Mode
+
+Choose one acceptance mode before implementation. If the user does not name one, infer it from the request and state the assumption.
+
+- `landing`: optimize for product comprehension, trust, and one dominant conversion action.
+- `prototype`: optimize for a user completing a feature flow across screens and states. Read [references/prototype-mode.md](references/prototype-mode.md).
+- `production-template`: optimize for reusable architecture, realistic states, responsive behavior, theming, and a credible engineering starting point.
+
+A deliverable may combine modes, but one mode must own the acceptance criteria. A landing page with a product demo is still `landing` unless the user asks to validate the underlying feature workflow.
+
+### 4. Build the System Before Sections
 
 Define semantic tokens first. Components consume tokens; components do not invent local palettes.
 
@@ -88,7 +99,7 @@ Important theme rule:
 
 Use the repository's icon library. Use familiar icons for familiar actions and label unfamiliar icon-only controls with tooltips and accessible names.
 
-### 4. Design the Product Story
+### 5. Design the Product Story
 
 Prefer this product-first sequence for SaaS and AI templates, adapting it to the actual goal:
 
@@ -105,7 +116,7 @@ Every section must answer a user question. Remove sections that exist only to ma
 
 Do not default to equal card grids, generic icon cards, abstract AI gradients, oversized marketing heroes, or fabricated social proof. For operational products, favor restrained surfaces, clear hierarchy, and real interface states.
 
-### 5. Implement Meaningful Interactions
+### 6. Implement Meaningful Interactions
 
 A production template should demonstrate its primary workflow. Build the interactions users naturally expect, not decorative motion.
 
@@ -123,7 +134,7 @@ Interactions need keyboard support, visible focus, hover/pressed feedback, reali
 
 Do not claim an integration works when the prototype only simulates it. Label generated content as AI output and include an appropriate accuracy disclaimer when relevant.
 
-### 6. Refine With a Production Audit
+### 7. Refine With a Production Audit
 
 For an existing page, do not rewrite first. Diagnose the weak point and make a focused change.
 
@@ -141,7 +152,7 @@ Check for:
 
 Use [references/redesign-audit.md](references/redesign-audit.md) for the full pass.
 
-### 7. Verify Before Delivery
+### 8. Verify Before Delivery
 
 Always run the repository's existing checks first. Then verify the rendered result over HTTP.
 

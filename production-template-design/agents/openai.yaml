@@ -1,7 +1,7 @@
 interface:
   display_name: "Production Template Design"
-  short_description: "Design and verify production-grade product templates."
-  default_prompt: "Use $production-template-design to design or refine this product as a production-grade template, implement meaningful interactions, support responsive light/dark themes, and verify the result in a real browser."
+  short_description: "Design and verify product templates and feature prototypes."
+  default_prompt: "Use $production-template-design in the appropriate landing, prototype, or production-template mode to design or refine this product, implement meaningful interactions, support responsive light/dark themes, and verify the result in a real browser."
 
 policy:
   allow_implicit_invocation: true

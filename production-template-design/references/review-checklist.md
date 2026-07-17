@@ -29,6 +29,17 @@ Complete this before delivery. Report blocked checks explicitly.
 - [ ] Empty, error, retry, and first-use states are covered when relevant.
 - [ ] Reduced-motion preferences are respected.
 
+## Feature Prototype Flow
+
+- [ ] Actor, goal, entry point, and preconditions are explicit.
+- [ ] Primary happy path is complete from entry to success.
+- [ ] At least one meaningful alternate or recovery path is represented.
+- [ ] Async states show loading, partial, success, and failure where relevant.
+- [ ] Back navigation, cancel, refresh, and duplicate actions behave intentionally.
+- [ ] Persistence expectations after reload are stated and checked.
+- [ ] Simulated integrations are clearly separated from real integrations.
+- [ ] AI output is labeled and tool or context loss has a defined response when relevant.
+
 ## Responsive
 
 - [ ] No horizontal document overflow at 1440, 768, and 390px.

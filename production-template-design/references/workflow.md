@@ -51,9 +51,21 @@ Exit criteria:
 - one component does not invent a new palette
 - fixed-format UI has stable dimensions
 
-## Phase 3: Product Surface
+## Phase 3: Choose The Delivery Mode
+
+Choose the acceptance lens before implementation:
+
+- `landing`: product comprehension, trust, and one dominant conversion action
+- `prototype`: task completion, state changes, recovery, and navigation
+- `production-template`: reusable architecture, realistic states, responsive behavior, and theming
+
+A page may combine modes, but one mode must own the acceptance criteria.
+
+## Phase 4: Product Surface
 
 Build the core experience before supporting marketing sections.
+
+For a feature prototype, define the user flow and state inventory first. Cover the happy path plus the alternate states that a user can realistically encounter. Read [prototype-mode.md](prototype-mode.md).
 
 For AI chat, this often includes:
 
@@ -66,10 +78,11 @@ For AI chat, this often includes:
 
 Exit criteria:
 
-- the primary workflow can be demonstrated
+- the primary workflow can be demonstrated from a clear entry point
+- alternate or recovery states are represented when relevant
 - the product surface reveals the actual product category
 
-## Phase 4: Page Narrative
+## Phase 5: Page Narrative
 
 Connect the product experience to the landing-page narrative.
 
@@ -87,7 +100,7 @@ Exit criteria:
 - section order supports that action
 - no section is present only as filler
 
-## Phase 5: Refinement
+## Phase 6: Refinement
 
 Audit:
 
@@ -105,7 +118,7 @@ Exit criteria:
 - transitions between page bands feel intentional
 - primary content remains scannable
 
-## Phase 6: Verification
+## Phase 7: Verification
 
 Run:
 
@@ -123,7 +136,7 @@ Exit criteria:
 - key interactions pass
 - unverified visual or integration risks are explicitly reported
 
-## Phase 7: Delivery
+## Phase 8: Delivery
 
 Provide:
 
