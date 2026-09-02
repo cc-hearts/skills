@@ -1,0 +1,7 @@
+interface:
+  display_name: "Code Simplifier"
+  short_description: "Refactor and simplify code without blind fallback shims."
+  default_prompt: "Use $code-simplifier to simplify and clean up recently modified code, removing redundant fallbacks and clarifying unknown fields."
+
+policy:
+  allow_implicit_invocation: true
