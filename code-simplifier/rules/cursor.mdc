@@ -1,0 +1,32 @@
+---
+description: Refactor, simplify, and modernize code without blind fallback shims. Enforce guard clauses, eliminate dead code, and execute the Stop-and-Clarify protocol for ambiguous legacy fields.
+globs: *
+alwaysApply: false
+---
+
+# Code Simplifier & Anti-Fallback Protocol
+
+When invoked or asked to simplify, refactor, or clean up code:
+
+## 1. 核心铁律：严禁无底线兼容 (Zero-Tolerance for Blind Compatibility)
+- **严禁编写投机性回退链**：严禁写类似 `data?.newProp ?? data?.oldProp ?? data?.legacy_prop`。
+- **严禁使用 loose types 掩盖类型问题**：不要用 `any`、`unknown` 或随意类型断言来对齐存疑字段。
+- **严禁静默保留过时兼容层**：积极识别已弃用的 shims、polyfills、废弃入参并提示移除。
+
+## 2. 存疑停步确认机制 (Stop-and-Clarify Protocol)
+当遇到存疑、历史遗留或定义模糊的字段时，**必须暂停修改并向用户发起确认**，严禁自作主张编写防御性兜底代码：
+
+> ⚠️ **[Code Simplifier] 发现存疑字段/逻辑，请确认：**
+> 1. **代码位置**：`[文件相对路径:行号]`
+> 2. **存疑字段/逻辑**：`fieldName`（当前用法及上下文说明）
+> 3. **核心疑问**：该字段是当前依然需要的业务逻辑，还是历史遗留字段？
+> 4. **处理方案选项**：
+>    - **选项 A（推荐）**：已废弃，直接移除该字段及相关判断，不做任何兼容兜底。
+>    - **选项 B**：属当前标准字段，补齐规范类型定义，清理其他旧别名。
+>    - **选项 C**：必须保留兼容，请明确指定兼容周期或统一在入参适配层转换。
+
+## 3. 代码精简准则
+1. **卫语句压平嵌套**：使用早期返回（Early Return / Guard Clauses）替代深层 `if-else`。
+2. **清理死逻辑与中间变量**：消除无意义的临时变量、重复布尔判断与不可达代码。
+3. **消除过度抽象**：内联仅使用一次且晦涩的单用 Helper/Wrapper。
+4. **输出完整性**：提供完整代码，严禁使用 `// ... rest of code unchanged` 等懒惰占位符。

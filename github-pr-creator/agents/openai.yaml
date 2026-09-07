@@ -1,0 +1,7 @@
+interface:
+  display_name: "GitHub & Gitee PR Creator"
+  short_description: "Draft standard PRs for GitHub & Gitee with antdv-next template & branch selection"
+  default_prompt: "Use $github-pr-creator to inspect branch changes, select the target branch, and draft a bilingual PR for GitHub or Gitee."
+
+policy:
+  allow_implicit_invocation: true

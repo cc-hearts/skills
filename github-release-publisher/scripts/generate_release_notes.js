@@ -1,43 +1,15 @@
 #!/usr/bin/env node
 
-declare function require(name: string): any;
-declare const process: {
-  argv: string[];
-  exit(code?: number): never;
-  stdout: { write(text: string): void };
-};
-
 const { existsSync, statSync, writeFileSync, readFileSync } = require("fs");
 const { spawnSync } = require("child_process");
 const { resolve, basename } = require("path");
 
-type Category = "breaking" | "features" | "fixes" | "performance" | "docs_dx" | "tooling" | "internal";
-
-type Commit = {
-  sha: string;
-  subject: string;
-};
-
-type GroupedCommits = Record<Category, string[]>;
-
-type Template = "product" | "sdk" | "cli" | "standard" | "minimal" | "generic" | "memory-report";
-
-type ParsedArgs = {
-  repo: string;
-  version: string;
-  previousTag?: string;
-  currentRef: string;
-  template: Template;
-  projectName?: string;
-  output?: string;
-};
-
-function fail(message: string): never {
+function fail(message) {
   console.error(message);
   process.exit(1);
 }
 
-function runGit(repo: string, args: string[]): string {
+function runGit(repo, args) {
   const result = spawnSync("git", ["-C", repo, ...args], {
     encoding: "utf8",
   });
@@ -49,7 +21,7 @@ function runGit(repo: string, args: string[]): string {
   return result.stdout.trim();
 }
 
-function tryRunGit(repo: string, args: string[]): string | undefined {
+function tryRunGit(repo, args) {
   const result = spawnSync("git", ["-C", repo, ...args], {
     encoding: "utf8",
   });
@@ -61,19 +33,19 @@ function tryRunGit(repo: string, args: string[]): string | undefined {
   return result.stdout.trim();
 }
 
-function existingTag(repo: string, tag: string): boolean {
+function existingTag(repo, tag) {
   const result = spawnSync("git", ["-C", repo, "rev-parse", "-q", "--verify", `refs/tags/${tag}`], {
     encoding: "utf8",
   });
   return result.status === 0;
 }
 
-function listTags(repo: string): string[] {
+function listTags(repo) {
   const output = runGit(repo, ["tag", "--sort=-v:refname"]);
   return output.split(/\r?\n/).filter(Boolean);
 }
 
-function discoverPreviousTag(repo: string, version: string): string | undefined {
+function discoverPreviousTag(repo, version) {
   for (const tag of listTags(repo)) {
     if (tag !== version) {
       return tag;
@@ -82,11 +54,11 @@ function discoverPreviousTag(repo: string, version: string): string | undefined 
   return undefined;
 }
 
-function commitRange(previousTag: string | undefined, currentRef: string): string {
+function commitRange(previousTag, currentRef) {
   return previousTag ? `${previousTag}..${currentRef}` : currentRef;
 }
 
-function loadCommits(repo: string, rangeSpec: string): Commit[] {
+function loadCommits(repo, rangeSpec) {
   const raw = runGit(repo, ["log", "--no-merges", "--pretty=format:%h%x09%s", rangeSpec]);
 
   return raw
@@ -101,7 +73,7 @@ function loadCommits(repo: string, rangeSpec: string): Commit[] {
     });
 }
 
-function cleanSubject(subject: string): string {
+function cleanSubject(subject) {
   const stripped = subject.trim().replace(/^\w+(?:\([^)]+\))?!?:\s*/, "");
   if (!stripped) {
     return "";
@@ -111,7 +83,7 @@ function cleanSubject(subject: string): string {
   return /\.$/.test(normalized) ? normalized : `${normalized}.`;
 }
 
-function classify(subject: string): Category {
+function classify(subject) {
   const normalized = subject.toLowerCase();
 
   if (
@@ -139,8 +111,8 @@ function classify(subject: string): Category {
   return "internal";
 }
 
-function groupCommits(commits: Commit[]): GroupedCommits {
-  const grouped: GroupedCommits = {
+function groupCommits(commits) {
+  const grouped = {
     breaking: [],
     features: [],
     fixes: [],
@@ -161,7 +133,7 @@ function groupCommits(commits: Commit[]): GroupedCommits {
   return grouped;
 }
 
-function detectProjectName(repo: string): string {
+function detectProjectName(repo) {
   const pkgPath = resolve(repo, "package.json");
   if (existsSync(pkgPath)) {
     try {
@@ -170,7 +142,7 @@ function detectProjectName(repo: string): string {
         return pkg.name;
       }
     } catch {
-      // ignore JSON parse error
+      // ignore
     }
   }
 
@@ -185,7 +157,7 @@ function detectProjectName(repo: string): string {
   return basename(repo);
 }
 
-function guessCompareUrl(repo: string, previousTag: string | undefined, version: string): string | undefined {
+function guessCompareUrl(repo, previousTag, version) {
   if (!previousTag) {
     return undefined;
   }
@@ -194,7 +166,7 @@ function guessCompareUrl(repo: string, previousTag: string | undefined, version:
   if (!origin) {
     return undefined;
   }
-  const match = origin.match(/(?:git@github\.com:|https:\/\/github\.com\/)([^/]+\/[^/.]+)(?:\.git)?$/);
+  const match = origin.match(/(?:git@github\.com:|https:\/\/github\.com\/)[^/]+\/([^/.]+)(?:\.git)?$/);
 
   if (!match) {
     return undefined;
@@ -203,10 +175,10 @@ function guessCompareUrl(repo: string, previousTag: string | undefined, version:
   return `https://github.com/${match[1]}/compare/${previousTag}...${version}`;
 }
 
-function topHighlights(grouped: GroupedCommits, limit = 3): string[] {
-  const highlights: string[] = [];
+function topHighlights(grouped, limit = 3) {
+  const highlights = [];
 
-  for (const category of ["breaking", "features", "fixes", "performance"] as const) {
+  for (const category of ["breaking", "features", "fixes", "performance"]) {
     for (const item of grouped[category]) {
       highlights.push(item);
       if (highlights.length >= limit) {
@@ -218,8 +190,8 @@ function topHighlights(grouped: GroupedCommits, limit = 3): string[] {
   return highlights;
 }
 
-function renderSection(title: string, items: string[]): string[] {
-  if (items.length === 0) {
+function renderSection(title, items) {
+  if (!items || items.length === 0) {
     return [];
   }
 
@@ -227,13 +199,7 @@ function renderSection(title: string, items: string[]): string[] {
 }
 
 // 1. Product / App Template (面向终端用户 / SaaS 应用)
-function renderProduct(
-  projectName: string,
-  version: string,
-  previousTag: string | undefined,
-  grouped: GroupedCommits,
-  compareUrl: string | undefined,
-): string {
+function renderProduct(projectName, version, previousTag, grouped, compareUrl) {
   const highlights = topHighlights(grouped, 3);
   const headline = highlights[0] || `Key updates and enhancements in this release.`;
 
@@ -260,13 +226,7 @@ function renderProduct(
 }
 
 // 2. SDK / Library Template (面向开发者 / 开源类库 / 框架)
-function renderSdk(
-  projectName: string,
-  version: string,
-  previousTag: string | undefined,
-  grouped: GroupedCommits,
-  compareUrl: string | undefined,
-): string {
+function renderSdk(projectName, version, previousTag, grouped, compareUrl) {
   const breakingSection =
     grouped.breaking.length > 0
       ? [
@@ -298,13 +258,7 @@ function renderSdk(
 }
 
 // 3. CLI / Tooling Template (面向命令行工具 / DevOps / 基础设施)
-function renderCli(
-  projectName: string,
-  version: string,
-  previousTag: string | undefined,
-  grouped: GroupedCommits,
-  compareUrl: string | undefined,
-): string {
+function renderCli(projectName, version, previousTag, grouped, compareUrl) {
   const pkgLower = projectName.toLowerCase();
 
   return [
@@ -339,13 +293,7 @@ function renderCli(
 }
 
 // 4. Standard Keep-a-Changelog Template
-function renderStandard(
-  projectName: string,
-  version: string,
-  previousTag: string | undefined,
-  grouped: GroupedCommits,
-  compareUrl: string | undefined,
-): string {
+function renderStandard(projectName, version, previousTag, grouped, compareUrl) {
   const dateStr = new Date().toISOString().slice(0, 10);
 
   return [
@@ -368,13 +316,7 @@ function renderStandard(
 }
 
 // 5. Minimal Template (极简轻量版)
-function renderMinimal(
-  projectName: string,
-  version: string,
-  previousTag: string | undefined,
-  commits: Commit[],
-  compareUrl: string | undefined,
-): string {
+function renderMinimal(projectName, version, previousTag, commits, compareUrl) {
   return [
     `## What's Changed in ${projectName} ${version}`,
     "",
@@ -390,13 +332,7 @@ function renderMinimal(
 }
 
 // Generic fallback
-function renderGeneric(
-  projectName: string,
-  version: string,
-  previousTag: string | undefined,
-  grouped: GroupedCommits,
-  compareUrl: string | undefined,
-): string {
+function renderGeneric(projectName, version, previousTag, grouped, compareUrl) {
   return [
     `## ${projectName} ${version}`,
     "",
@@ -418,7 +354,7 @@ function renderGeneric(
   ].join("\n");
 }
 
-function printHelp(): void {
+function printHelp() {
   process.stdout.write(`Generate a polished GitHub Release markdown draft from git history.
 
 Required:
@@ -435,8 +371,8 @@ Optional:
 `);
 }
 
-function parseArgs(argv: string[]): ParsedArgs {
-  const parsed: ParsedArgs = {
+function parseArgs(argv) {
+  const parsed = {
     repo: "",
     version: "",
     currentRef: "HEAD",
@@ -465,7 +401,7 @@ function parseArgs(argv: string[]): ParsedArgs {
         i += 1;
         break;
       case "--template":
-        parsed.template = value as Template;
+        parsed.template = value;
         i += 1;
         break;
       case "--project-name":
@@ -495,7 +431,7 @@ function parseArgs(argv: string[]): ParsedArgs {
   return parsed;
 }
 
-function main(): void {
+function main() {
   const args = parseArgs(process.argv.slice(2));
   const repo = resolve(args.repo);
 
@@ -515,7 +451,7 @@ function main(): void {
   const grouped = groupCommits(commits);
   const compareUrl = guessCompareUrl(repo, previousTag, args.version);
 
-  let body: string;
+  let body;
   switch (args.template) {
     case "sdk":
       body = renderSdk(projectName, args.version, previousTag, grouped, compareUrl);

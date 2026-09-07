@@ -1,0 +1,21 @@
+---
+description: Draft and publish polished, audience-tailored GitHub Releases with 5 modern industry templates (product, sdk, cli, standard, minimal).
+globs: *
+alwaysApply: false
+---
+
+# GitHub Release Publisher (Cursor Rule)
+
+When asked to draft, prepare, or publish a GitHub Release or update notes:
+
+## 1. 确定目标受众与发布模版
+- **`product` (默认)**: Web 应用、SaaS、客户端。关注体验提升、新功能、贡献者致谢。
+- **`sdk`**: 开源库、SDK、框架。🚨 **破坏性变更与迁移指南置顶**、代码示例、性能与类型。
+- **`cli`**: 命令行工具、Docker 镜像。📥 **一键安装升级命令**、参数配置变更、SHA-256 校验和。
+- **`standard`**: 遵循 Keep-a-Changelog (Added, Changed, Removed, Fixed)。
+- **`minimal`**: 日常 Bugfix、Patch 小版本、高频迭代。
+
+## 2. 核心要求
+- **禁止原始 Commit 堆砌**：将 Conventional Commits 转换为自然易读的读者语言。
+- **校验 Compare 链接**：确保对比链接格式为 `https://github.com/owner/repo/compare/<prevTag>...<version>`。
+- **醒目标记破坏性变更**：绝不隐匿破坏性改动。

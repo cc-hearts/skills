@@ -1,7 +1,7 @@
 interface:
   display_name: "Code Simplifier"
-  short_description: "Refactor and simplify code without blind fallback shims."
-  default_prompt: "Use $code-simplifier to simplify and clean up recently modified code, removing redundant fallbacks and clarifying unknown fields."
+  short_description: "Universal code refactoring without blind fallbacks or over-engineering."
+  default_prompt: "Use $code-simplifier to simplify and clean up code across languages, flatten nesting with guard clauses, and enforce Stop-and-Clarify on ambiguous fields."
 
 policy:
   allow_implicit_invocation: true
