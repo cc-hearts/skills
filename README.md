@@ -9,7 +9,7 @@
 | 技能名称 (Skill) | 核心定位 | 适用阶段 | 核心特色 |
 | :--- | :--- | :--- | :--- |
 | [`code-simplifier`](./code-simplifier/) | **代码精简与反过度兼容专家** | 重构 / 提交前清理 | 严禁无底线兼容回退；存疑/废弃字段**强制停步向用户确认**，杜绝技术债固化。 |
-| [`github-pr-creator`](./github-pr-creator/) | **标准 PR 生成与分支对齐 (GitHub & Gitee)** | 特性开发完成 / 准备提 PR | 基于 antdv-next 官方模版，类似 Code Review 确认目标分支与托管平台，智能勾选分类、关联 Issue (#123 或 #Ixxxx) 并输出双语 Changelog。 |
+| [`github-pr-creator`](./github-pr-creator/) | **标准 PR 生成与分支对齐 (GitHub & Gitee)** | 特性开发完成 / 准备提 PR | 内置标准化 PR 模版，类似 Code Review 确认目标分支与托管平台，智能勾选分类、关联 Issue (#123 或 #Ixxxx) 并输出双语 Changelog。 |
 | [`github-release-publisher`](./github-release-publisher/) | **GitHub Release 自动化发布** | 版本发版 / 交付 | 智能分析 Git 提交与 PR，内置 5 大现代模版（Product、SDK、CLI、Standard、Minimal）。 |
 | [`production-template-design`](./production-template-design/) | **生产级产品模板与原型设计** | 前期原型 / UI 开发 | 拒绝空洞原型，提供支持 shadcn 语义 Token、深浅主题、响应式交互的生产级界面。 |
 | [`qa-flow-review`](./qa-flow-review/) | **QA 视角端到端回归走查** | 开发完成 / 提测前 | 梳理变更影响面、发现遗漏的测试场景，输出高风险排查清单与潜在 Bug 预警。 |
@@ -150,14 +150,14 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
 
 ---
 
-### 5. `github-pr-creator` (基于 antdv-next 规范的 GitHub & Gitee PR 生成器)
+### 5. `github-pr-creator` (GitHub & Gitee 标准 PR 生成器)
 - **多平台触发方式**：
   - **Codex**: `$github-pr-creator`
   - **Claude Code / Antigravity**: 自然语言输入或直接调用脚本
   - **Cursor**: Composer 中 `@github-pr-creator` 或自动应用 `.cursor/rules`
 - **支持平台**：**GitHub** 与 **Gitee（码云）**，自动通过远程仓库链接识别，或通过 `--platform <gh|gitee>` 指定。
 - **推荐 Prompt**：
-  > “使用 github-pr-creator 分析当前分支代码，确认目标分支后，按照 antdv-next 官方模版生成一份标准的 PR 说明草稿。”
+  > “使用 github-pr-creator 分析当前分支代码，确认目标分支后，按照标准化 PR 模版生成一份规范的 PR 说明草稿。”
 - **预期行为**：
   - **类似 Code Review 的目标分支与平台选择流程**：自动识别当前分支与平台（GitHub/Gitee），若未指定目标分支则主动询问合并基准（默认 `main` 或 `next`）。
   - **智能勾选分类**：分析修改的文件与提交，自动在 `### 🤔 本次变更属于 ...` 打勾（如新功能、Bug 修复、TS 类型、组件样式、测试用例等）。
