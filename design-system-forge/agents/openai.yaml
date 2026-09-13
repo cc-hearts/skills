@@ -1,0 +1,7 @@
+interface:
+  display_name: "Design System Forge"
+  short_description: "Forge a complete design system starter (tokens + AI conventions + verify + showcase) for any user and scenario."
+  default_prompt: "Use $design-system-forge to create a custom design system starter: ask territory / executor / aesthetic / name, fill the derivation chain, generate the project from the template, and pass verify with a visual self-review before delivery."
+
+policy:
+  allow_implicit_invocation: true

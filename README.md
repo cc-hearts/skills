@@ -13,6 +13,7 @@
 | [`github-release-publisher`](./github-release-publisher/) | **GitHub Release 自动化发布** | 版本发版 / 交付 | 智能分析 Git 提交与 PR，内置 5 大现代模版（Product、SDK、CLI、Standard、Minimal）。 |
 | [`production-template-design`](./production-template-design/) | **生产级产品模板与原型设计** | 前期原型 / UI 开发 | 拒绝空洞原型，提供支持 shadcn 语义 Token、深浅主题、响应式交互的生产级界面。 |
 | [`qa-flow-review`](./qa-flow-review/) | **QA 视角端到端回归走查** | 开发完成 / 提测前 | 梳理变更影响面、发现遗漏的测试场景，输出高风险排查清单与潜在 Bug 预警。 |
+| [`design-system-forge`](./design-system-forge/) | **设计系统批量锻造** | 从 0 创建 / 品牌化定制 | 四问定参 + 推导链方法论（领地→主张→铁律→token→决策表→验证）+ 五件套样板工程（tokens/SKILL/verify/介绍页/README），强制 verify、反向测试与逐屏截图自查，支持纸感编辑风、冷静极简、高对比现代等风格批量产出。 |
 
 ---
 
@@ -165,6 +166,21 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
   - **平台特化交付物**：
     - **GitHub 模式**：输出规范 PR 标题与 `gh pr create` 命令。
     - **Gitee 模式**：输出带分支预选参数的**网页直达创建链接**（`https://gitee.com/.../pulls/new?source=...&target=...`）及格式化好的 Markdown 草稿。
+
+---
+
+### 6. `design-system-forge` (设计系统批量锻造)
+- **多平台触发方式**：
+  - **Codex**: `$design-system-forge`
+  - **Claude Code / Antigravity**: 自然语言调用，或“帮我做一套设计系统”
+  - **Cursor / Windsurf / Cline**: 引用 `rules/` 下对应规则文件唤起
+- **推荐 Prompt**：
+  > “使用 design-system-forge 为我的技术博客做一套深色科技风的设计系统，名字叫「曜」。”
+- **预期行为**：
+  - **四问定参数**：领地（AI 文档 / Web 界面 / 幻灯片海报）、执行者（AI agent / 人 / 两者）、审美方向（纸感编辑风 / 冷静极简 / 高对比现代 / 从作品反推）、名字（名字即裁判）。审美说不清时自动走反推法五问（暖冷 / 衬线 / 一色多色 / 方圆 / 疏密）。
+  - **推导链生成**：按领地 → 主张 → 铁律 → token → 决策表 → 验证的顺序，从 `assets/xuan-template/` 五件套样板锻造出完整项目（tokens.css、SKILL.md、verify.mjs、index.html、README.md），铁律 2~3 条、每条可判定且带理由、每条至少一个自动检查。
+  - **强制质检**：verify 通过 + 反向测试确认违规必被拦截 + 浏览器起本地服务逐屏截图自查（含 webfont 加载确认），三关全过才交付。
+  - **交付物自带三处定制点**：名字、主色、主张，留给用户把它变成“自己的”系统。
 
 ---
 
