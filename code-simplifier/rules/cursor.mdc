@@ -1,19 +1,37 @@
 ---
-description: Refactor, simplify, and modernize code without blind fallback shims. Enforce guard clauses, eliminate dead code, and execute the Stop-and-Clarify protocol for ambiguous legacy fields.
+description: Review code across 7 dimensions with severity-graded reports, then refactor safely after confirmation. No blind fallback shims, guard clauses to flatten nesting, Stop-and-Clarify protocol for ambiguous legacy fields.
 globs: *
 alwaysApply: false
 ---
 
-# Code Simplifier & Anti-Fallback Protocol
+# Code Review & Simplifier（审查 → 分级 → 确认 → 修复）
 
-When invoked or asked to simplify, refactor, or clean up code:
+When invoked or asked to review, simplify, refactor, or clean up code:
 
 ## 1. 核心铁律：严禁无底线兼容 (Zero-Tolerance for Blind Compatibility)
 - **严禁编写投机性回退链**：严禁写类似 `data?.newProp ?? data?.oldProp ?? data?.legacy_prop`。
 - **严禁使用 loose types 掩盖类型问题**：不要用 `any`、`unknown` 或随意类型断言来对齐存疑字段。
 - **严禁静默保留过时兼容层**：积极识别已弃用的 shims、polyfills、废弃入参并提示移除。
 
-## 2. 存疑停步确认机制 (Stop-and-Clarify Protocol)
+## 2. 七维审查（按优先级）
+1. **类型安全**：禁 `any`；边界处精确类型或运行时校验；魔法字符串改联合类型/枚举。
+2. **状态与数据流**：不可变；单一数据源（派生数据不落地、禁止 `userId`/`user_id` 双命名并存）；状态最小化。
+3. **单一职责与组合**：文件超 ~200 行、函数超 ~50 行要质疑；组合优于继承；嵌套超 2 层用卫语句压平。
+4. **DRY**：相同逻辑出现 ≥ 2 次必须提取，逐块对比 AI 复制粘贴的相似代码。
+5. **YAGNI & KISS**：删除未使用的导出、参数与投机性抽象；一个函数能解决的不要类 + 接口 + 工厂。
+6. **快速失败**：入口立即校验、错误带上下文；禁止吞错；反向也查过度防御判空。
+7. **性能**：热路径上的重复计算、N+1 请求、大列表无分页；无测量依据的优化同样是噪音。
+- **AI 高发专项（必查）**：复制粘贴块、废话注释、注释掉的死代码、遗留 TODO、与项目既有模式不一致。
+
+## 3. 分级报告（先报告，再动手）
+每条问题：`文件:行号` + 问题描述 + 违反的维度 + 具体改法。
+- 🔴 必须修复 — 类型安全、快速失败、正确性
+- 🟡 建议修复 — DRY、YAGNI、性能、职责划分
+- 🔵 可选 — 风格、命名、注释
+
+全部通过时明确说"通过"，不要硬找问题凑数。即使用户直接要求"精简"，也先出分级报告再改。
+
+## 4. 存疑停步确认机制 (Stop-and-Clarify Protocol)
 当遇到存疑、历史遗留或定义模糊的字段时，**必须暂停修改并向用户发起确认**，严禁自作主张编写防御性兜底代码：
 
 > ⚠️ **[Code Simplifier] 发现存疑字段/逻辑，请确认：**
@@ -25,8 +43,8 @@ When invoked or asked to simplify, refactor, or clean up code:
 >    - **选项 B**：属当前标准字段，补齐规范类型定义，清理其他旧别名。
 >    - **选项 C**：必须保留兼容，请明确指定兼容周期或统一在入参适配层转换。
 
-## 3. 代码精简准则
-1. **卫语句压平嵌套**：使用早期返回（Early Return / Guard Clauses）替代深层 `if-else`。
-2. **清理死逻辑与中间变量**：消除无意义的临时变量、重复布尔判断与不可达代码。
-3. **消除过度抽象**：内联仅使用一次且晦涩的单用 Helper/Wrapper。
-4. **输出完整性**：提供完整代码，严禁使用 `// ... rest of code unchanged` 等懒惰占位符。
+## 5. 安全重构准则（用户确认后）
+1. **变更边界**：仅改动用户指定文件或本次 Diff 范围，严禁误伤无关模块。
+2. **卫语句压平嵌套**：使用早期返回（Early Return / Guard Clauses）替代深层 `if-else`。
+3. **清理死逻辑与过度抽象**：消除无用临时变量、不可达分支；内联仅使用一次且晦涩的包装函数。
+4. **输出完整性**：提供完整代码，严禁使用 `// ... rest of code unchanged` 等懒惰占位符；结尾附重构审计清单。

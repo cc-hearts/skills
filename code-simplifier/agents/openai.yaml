@@ -1,7 +1,7 @@
 interface:
   display_name: "Code Simplifier"
-  short_description: "Universal code refactoring without blind fallbacks or over-engineering."
-  default_prompt: "Use $code-simplifier to simplify and clean up code across languages, flatten nesting with guard clauses, and enforce Stop-and-Clarify on ambiguous fields."
+  short_description: "Seven-dimension code review with severity grading, then safe refactoring without blind fallbacks."
+  default_prompt: "Use $code-simplifier to review code across 7 dimensions with a severity-graded report, then refactor after confirmation: remove dead code and blind fallbacks, enforce Stop-and-Clarify on ambiguous fields."
 
 policy:
   allow_implicit_invocation: true

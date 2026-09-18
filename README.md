@@ -8,7 +8,7 @@
 
 | 技能名称 (Skill) | 核心定位 | 适用阶段 | 核心特色 |
 | :--- | :--- | :--- | :--- |
-| [`code-simplifier`](./code-simplifier/) | **代码精简与反过度兼容专家** | 重构 / 提交前清理 | 严禁无底线兼容回退；存疑/废弃字段**强制停步向用户确认**，杜绝技术债固化。 |
+| [`code-simplifier`](./code-simplifier/) | **代码审查与精简专家（七维审查 + 反过度兼容）** | 审查 / 重构 / 提交前清理 | 七维审查 + 🔴🟡🔵 分级报告，先报告再动手；严禁无底线兼容回退；存疑/废弃字段**强制停步向用户确认**，杜绝技术债固化。 |
 | [`github-pr-creator`](./github-pr-creator/) | **标准 PR 生成与分支对齐 (GitHub & Gitee)** | 特性开发完成 / 准备提 PR | 内置标准化 PR 模版，类似 Code Review 确认目标分支与托管平台，智能勾选分类、关联 Issue (#123 或 #Ixxxx) 并输出双语 Changelog。 |
 | [`github-release-publisher`](./github-release-publisher/) | **GitHub Release 自动化发布** | 版本发版 / 交付 | 智能分析 Git 提交与 PR，内置 5 大现代模版（Product、SDK、CLI、Standard、Minimal）。 |
 | [`production-template-design`](./production-template-design/) | **生产级产品模板与原型设计** | 前期原型 / UI 开发 | 拒绝空洞原型，提供支持 shadcn 语义 Token、深浅主题、响应式交互的生产级界面。 |
@@ -90,7 +90,7 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
 
 安装完成后，在不同 AI 编程助手内可通过快捷前缀或自然语言即刻唤醒技能：
 
-### 1. `code-simplifier` (全平台代码精简与反过度兼容)
+### 1. `code-simplifier` (全平台代码审查与精简)
 - **多平台触发方式**：
   - **Codex**: `$code-simplifier`
   - **Claude Code**: `/simplify` 或 “使用 code-simplifier 精简代码”
@@ -99,9 +99,10 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
   - **Windsurf / Cline / Copilot**: 引用规则或提示词唤起
 - **支持语言**：TypeScript/JavaScript、Python、Go、Java/Kotlin、Rust 等。
 - **推荐 Prompt**：
-  > “使用 code-simplifier 帮我精简刚修改的代码。严格遵守 Stop-and-Clarify 规则，如果遇到不确定或历史废弃字段，立刻停下来向我确认，不要自作主张写 fallback 兼容。”
+  > “使用 code-simplifier 审查我刚修改的代码并输出分级报告，确认后修复 🔴 项。严格遵守 Stop-and-Clarify 规则，如果遇到不确定或历史废弃字段，立刻停下来向我确认，不要自作主张写 fallback 兼容。”
 - **预期行为**：
-  - 严格遵守 4 步执行流：扫描范围 ➔ 坏味道与兜底嗅探 ➔ 停步确认 ➔ 完整重构。
+  - 严格遵守 5 步执行流：边界扫描 ➔ 七维审查与坏味道嗅探 ➔ 🔴🟡🔵 分级报告 ➔ 停步确认 ➔ 完整重构。
+  - 审查维度覆盖：类型安全、状态与数据流、单一职责与组合、DRY、YAGNI/KISS、快速失败、性能，外加 AI 高发问题专项（复制粘贴、废话注释、死代码）。
   - 用卫语句（Guard Clauses）消除多层嵌套。
   - 遇到可疑的废弃字段或属性时，**打断并输出标准化提问卡片**，让开发者做决定，杜绝盲目兜底技术债。
   - 参考内部跨语言指南：[anti-patterns.md](./code-simplifier/references/anti-patterns.md)。
