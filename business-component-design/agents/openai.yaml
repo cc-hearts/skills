@@ -1,0 +1,7 @@
+interface:
+  display_name: "Business Component Design"
+  short_description: "Design decoupled business components with isolated interactive playgrounds, mock data, and zero side-effects."
+  default_prompt: "Use $business-component-design to extract business UI into a clean, decoupled component with an interactive mock playground before integrating into pages."
+
+policy:
+  allow_implicit_invocation: true

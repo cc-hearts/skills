@@ -14,6 +14,7 @@
 | [`production-template-design`](./production-template-design/) | **生产级产品模板与原型设计** | 前期原型 / UI 开发 | 拒绝空洞原型，提供支持 shadcn 语义 Token、深浅主题、响应式交互的生产级界面。 |
 | [`qa-flow-review`](./qa-flow-review/) | **QA 视角端到端回归走查** | 开发完成 / 提测前 | 梳理变更影响面、发现遗漏的测试场景，输出高风险排查清单与潜在 Bug 预警。 |
 | [`design-system-forge`](./design-system-forge/) | **设计系统批量锻造** | 从 0 创建 / 品牌化定制 | 四问定参 + 推导链方法论（领地→主张→铁律→token→决策表→验证）+ 五件套样板工程（tokens/SKILL/verify/介绍页/README），强制 verify、反向测试与逐屏截图自查，支持纸感编辑风、冷静极简、高对比现代等风格批量产出。 |
+| [`business-component-design`](./business-component-design/) | **业务组件沙箱设计与副作用隔离 (Playground-Driven CDD)** | 业务组件开发 / 页面解耦重构 | 告别 Storybook/Vite 重型依赖绑架；倡导**纯净契约 + 本地交互式 Playground + 副作用隔离**。脱离真实接口与深层路由，先用 Mock 数据自测验证所有交互状态与 Emits，再轻薄装配到业务页面。 |
 
 ---
 
@@ -182,6 +183,23 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
   - **推导链生成**：按领地 → 主张 → 铁律 → token → 决策表 → 验证的顺序，从 `assets/xuan-template/` 五件套样板锻造出完整项目（tokens.css、SKILL.md、verify.mjs、index.html、README.md），铁律 2~3 条、每条可判定且带理由、每条至少一个自动检查。
   - **强制质检**：verify 通过 + 反向测试确认违规必被拦截 + 浏览器起本地服务逐屏截图自查（含 webfont 加载确认），三关全过才交付。
   - **交付物自带三处定制点**：名字、主色、主张，留给用户把它变成“自己的”系统。
+
+---
+
+### 7. `business-component-design` (业务组件沙箱设计与副作用隔离)
+- **多平台触发方式**：
+  - **Codex**: `$business-component-design`
+  - **Claude Code / Antigravity**: 自然语言调用，或“帮我把这个业务组件抽离并配上本地 playground”
+  - **Cursor**: Composer 中 `@business-component-design` 或配合 `.cursor/rules`
+  - **Windsurf / Cline / Copilot**: 引用规则或提示词唤起
+- **支持框架**：Vue 3 (默认)、React 等前端技术栈。
+- **推荐 Prompt**：
+  > “使用 business-component-design 将当前订单页面的审批人选择弹窗抽成独立的业务组件，严禁在组件内直接调接口或操作路由，并为它生成本地 mock 数据和交互式 playground 调试沙箱。”
+- **预期行为**：
+  - **副作用彻底隔离**：组件内部严禁直接发网络请求（axios）或操作路由，数据纯靠 `Props` 传入，变更纯靠 `Emits` 冒泡。
+  - **本地调试沙箱（零重型依赖）**：自动生成 `mock.ts` 与自带控制面板、事件监听面板的 `playground.vue`，无需依赖 Storybook 或特定打包器即可在本地即时验证交互。
+  - **先验证后装配**：在本地沙箱穷举正常态、加载态、空数据与极端长文本态后，再接入业务页面，将对页面的破坏性降为 0。
+  - 详细指南见：[playground-guide.md](./business-component-design/references/playground-guide.md)。
 
 ---
 

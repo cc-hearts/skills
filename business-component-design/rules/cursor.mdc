@@ -1,0 +1,24 @@
+---
+description: Design decoupled business components with isolated interactive playgrounds, mock data, and zero direct side-effects before page assembly.
+globs: src/components/**, src/views/**, src/pages/**
+alwaysApply: false
+---
+
+# Business Component Design & Playground Guidelines
+
+When extracting, refactoring, or creating business components:
+
+## 1. 核心铁律：副作用隔离 (Zero Direct Side-Effects)
+- **严禁在可复用业务组件中直接引入接口请求**：禁止 `import request/axios`，数据一律通过 `Props` 传入，操作一律通过 `Emits` 冒泡。
+- **严禁直接操作路由与全局单一 Store**：禁止直接调用 `router.push()`，由外层容器监听事件执行导航。
+- **严禁在业务页面模板中内联大块组件**：模态框、抽屉、复合筛选器必须抽成独立组件。
+
+## 2. 必备三件套（即使没有 Storybook/Vite）
+对每一个新建的业务组件，统一采用以下三件套结构：
+1. `[ComponentName]/index.vue`：纯净 UI 组件，只认 Props / Emits / Slots。
+2. `[ComponentName]/mock.ts`：包含 Normal、Empty、EdgeCase（长文本/极值）三套 Mock 数据。
+3. `[ComponentName]/playground.vue`：本地即开即用的交互调试沙箱，包含状态开关控制器与实时事件捕获日志。
+
+## 3. 开发闭环：先沙箱调试，再业务装配
+- 在 Playground 中脱离后端接口验证 Loading、Empty、溢出换行、按钮点击与 Emit 触发。
+- 调试完全跑通后，业务 Page 仅作为“装配工”引入组件，负责绑定真实 API 与数据传递。
