@@ -1,42 +1,54 @@
 # GitHub Release 现代发布模版终极指南 (Release Templates Guide)
 
-不同类型的软件项目（Web 应用、类库/SDK、命令行工具、内部微服务等）有着截然不同的用户群体和交付诉求。本指南收录了 5 种行业主流的标准 Release 模版范式。
+不同类型的软件项目（Web 应用、类库/SDK、命令行工具、内部微服务等）有着截然不同的用户群体和交付诉求。本指南收录了 6 种行业主流的标准 Release 模版范式以及 Monorepo 多包发版规则。
 
 ---
 
-## 1. 🚀 `product` 模版：面向产品与 SaaS 终端用户
+## 1. 🇨🇳/🇺🇸 `bilingual` 模版：面向开源社区与双语生态（推荐 / 默认）
 
 ### 适用场景
-- Web 应用、SaaS 平台、移动 App、桌面客户端、交互式界面。
-- **受众**：产品用户、客户、业务团队、运营人员。
-- **核心重点**：突出“给用户带来的核心价值与直观体验变化”，语调生动友好，带适量 emoji，屏蔽晦涩的技术细节。
+- Ant Design、Vue、Element Plus 等主流开源库与组件生态项目。
+- **受众**：国内外开源开发者、下游集成方。
+- **核心重点**：中英双语精准对齐（`英文改动 — 中文说明`），分类清晰（Features, Bug Fixes, Maintenance），无空洞营销词汇，文末附带完整的 `What's Changed` 与 PR 链接。
 
 ### 结构范例
 ```markdown
-# [Product Name] v2.4.0
+# @antdv-next/x@1.2.4
 
-> 🚀 **版本亮点**：全新支持实时协同画布与智能组件一键排版，让团队协作效率提升 50%！
+## 🚀 Features
 
-### ✨ 核心亮点 (Highlights)
-- **实时多人协同编辑**：现在你可以与团队成员在同一个画布上实时查看光标位置并同步修改。
-- **智能排版系统**：新增智能对齐和网格吸附引擎，复杂界面排版不再耗费精力。
+- feat(docs): use createMirrorRedirect from docs-plugins — 文档站接入 `@antdv-next/docs-plugins` 提供的 `createMirrorRedirect` 方案，支持时区与语言评分、探活检测及国内镜像站智能重定向。 (#217)
+- feat(ci): integrate pkg.pr.new preview package publishing — 集成 `pkg.pr.new` 自动化预览包发布流程，每个 PR 均会自动发布免本地编译的临时安装包，方便实时验证变更。 (#218)
+- feat(ci): upload coverage reports to Codecov — 接入 Codecov 自动上报单元测试覆盖率报告。 (#218)
 
-### 🌟 新增功能 (What's New)
-- **深色模式增强**：优化了在高对比度显示器下的暗黑背景与边框颜色呈现。
-- **一键导出 PDF/SVG**：支持以无损矢量格式导出整个项目看板。
+## 🐛 Bug Fixes
 
-### 🛠️ 体验优化与 Bug 修复 (Improvements & Fixes)
-- 优化了百万级大量节点下的画布缩放流畅度，帧率稳定在 60fps。
-- 修复了 Safari 浏览器下偶现的复制快捷键失效问题 (#342)。
-- 修复了网络断开重连后偶发的数据丢失问题。
+- fix(mermaid): preserve progressive renders and invalidate stale results — 修复 Mermaid 组件在持续流式输出时图表长时间空白与异步竞态覆盖问题；渲染耗时超过节流间隔时允许渐进帧平滑上屏，新结果提交后废弃晚到的旧结果，并在切换视图、清空内容或组件卸载时及时失效在途渲染。 (#213)
+- fix(docs): import createMirrorRedirect via deep path to keep vite out of client bundle — 修复误将构建期 Vite 依赖打入文档客户端入口 bundle 导致线上站点白屏的问题，改为深路径导入零依赖的浏览器安全模块。 (#219)
+- fix(docs): set demo headerMode to section for multi-section anchor hierarchy — 修复文档中多层级锚点的展示层级。 (e450cf5)
 
-### 👥 社区致谢 (Contributors)
-非常感谢以下社区贡献者对本版本的支持：
-- 感谢 @developer_a 提交的键盘快捷键补丁！
-- 感谢 @designer_b 提供的暗黑配色方案优化！
+## 🛠️ Maintenance & Refactor
 
----
-**Full Changelog**: https://github.com/org/repo/compare/v2.3.0...v2.4.0
+- chore(x-markdown): bump marked from 12.x to 16.x and migrate renderers to token API — 将 `marked` 升级至 `^16.2.1`（对齐上游），迁移 `html`/`link`/`paragraph`/`code` 渲染器到 marked v13+ Token 对象 API，保持行内 token 解析与 LaTeX 扩展完全兼容。 (#214)
+- chore: fix vitest config import warning and route tests through local vp — 修复 `vitest.config.ts` 未带扩展名引发的 Vite `configLoader: 'native'` 警告，并将测试规范收敛至项目本地 Vite+ 工具链，规避全局 CLI 导致的 jsdom 报错。 (#220)
+- chore: update upstream sync cursor — 同步上游代码游标。 (#210)
+
+--------
+
+## What's Changed
+
+- fix(docs): set demo headerMode to section for multi-section anchor hierarchy in e450cf5
+- chore: update upstream sync cursor in #210 https://github.com/antdv-next/x/pull/210
+- fix(mermaid): preserve progressive renders and invalidate stale results in #213 https://github.com/antdv-next/x/pull/213
+- chore(x-markdown): bump marked from 12.x to 16.x and migrate renderers to token API in #214 https://github.com/antdv-next/x/pull/214
+- feat(docs): use createMirrorRedirect from docs-plugins in #217 https://github.com/antdv-next/x/pull/217
+- ci: integrate pkg.pr.new preview publishing and Codecov in #218 https://github.com/antdv-next/x/pull/218
+- fix(docs): import createMirrorRedirect via deep path to keep vite out of client bundle in #219 https://github.com/antdv-next/x/pull/219
+- chore: fix vitest config import warning and route tests through local vp in #220 https://github.com/antdv-next/x/pull/220
+
+--------
+
+**Full Changelog**: https://github.com/antdv-next/x/compare/@antdv-next/x@1.2.3...@antdv-next/x@1.2.4
 ```
 
 ---
@@ -89,117 +101,50 @@
 
 ---
 
-## 3. ⚡ `cli` 模版：面向命令行工具、DevOps 与系统服务
+## 3. 🚀 `product` 模版：面向产品与 SaaS 终端用户
+
+### 适用场景
+- Web 应用、SaaS 平台、移动 App、桌面客户端、交互式界面。
+- **受众**：产品用户、客户、业务团队、运营人员。
+- **核心重点**：突出“给用户带来的核心价值与直观体验变化”，语调生动友好，带适量 emoji，屏蔽晦涩的技术细节。
+
+---
+
+## 4. ⚡ `cli` 模版：面向命令行工具、DevOps 与系统服务
 
 ### 适用场景
 - CLI 命令行工具、Docker 容器镜像、Kube 插件、基础设施组件。
 - **受众**：运维工程师、DevOps、系统管理员、终端极客。
 - **核心重点**：一键安装/升级命令放在第一屏，突出 CLI 参数（Flags）的变动与废弃，附带编译产物的 SHA-256 校验和。
 
-### 结构范例
-```markdown
-# [Tool Name] v1.5.0
-
-### 📥 快速安装与升级 (Quick Install & Upgrade)
-```bash
-# macOS (Homebrew)
-brew update && brew upgrade mytool
-
-# Linux / Shell 一键安装
-curl -fsSL https://get.mytool.dev | sh
-
-# Docker 镜像拉取
-docker pull myorg/mytool:v1.5.0
-```
-
-### ⚡ 关键更新 (Highlights)
-- 支持多线程并发备份与增量同步。
-- 引入新的 `--output=json` 和 `--output=yaml` 结构化输出支持。
-
-### 🔧 参数与配置变更 (Flags & Configuration)
-- **[新增]** `--timeout-ms`：允许自定义网络探测超时时间。
-- **[弃用]** `--insecure-skip-verify`：由于安全规范已标记弃用，请改用证书认证。
-
-### 🐛 问题修复 (Bug Fixes)
-- 修复 Linux ARM64 架构下信号中断（SIGINT）未能正常释放锁的问题。
-- 修复由于环境变量解析异常导致的崩溃 (#88)。
-
-### 🔐 校验和 (Artifacts & Checksums)
-| 操作系统与架构 | 文件包 | SHA-256 校验和 |
-| :--- | :--- | :--- |
-| macOS (Apple Silicon) | `mytool-v1.5.0-darwin-arm64.tar.gz` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
-| macOS (Intel) | `mytool-v1.5.0-darwin-amd64.tar.gz` | `ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb` |
-| Linux (x86_64) | `mytool-v1.5.0-linux-amd64.tar.gz` | `8277e0910d750195b448797616e091ad70a485c99ac7f600e69dec752f1df63c` |
-
----
-**Full Changelog**: https://github.com/org/repo/compare/v1.4.2...v1.5.0
-```
-
 ---
 
-## 4. 📋 `standard` 模版：遵循 Keep-a-Changelog 与 SemVer 规范
+## 5. 📋 `standard` 模版：遵循 Keep-a-Changelog 与 SemVer 规范
 
 ### 适用场景
 - 标准开源项目、讲究工程严谨性的基础库、自动化 CI/CD 发版流水线。
 - **受众**：任何阅读 Changelog 的技术人员与自动化解析脚本。
 - **核心重点**：严格按照 `Added` / `Changed` / `Deprecated` / `Removed` / `Fixed` / `Security` 六大维度归类，无主观煽情词汇。
 
-### 结构范例
-```markdown
-# [Project Name] v2.1.0 (2026-09-08)
-
-### Added
-- 支持在请求头上配置 `X-Request-Id` 以进行分布式链路追踪 (#102)
-- 为所有公共方法补充完整的类型注释
-
-### Changed
-- 将默认网络重试次数从 5 次缩减至 3 次
-- 优化内部事件循环调度策略
-
-### Deprecated
-- `Config.useOldParser` 将在下一个大版本中被移除
-
-### Removed
-- 移除对 Node.js 14 寿命终结版本的支持
-
-### Fixed
-- 修复在边缘网络抖动时的内存泄露缺陷 (#115)
-- 修复配置文件空行解析异常
-
-### Security
-- 升级依赖库 `json-parse-safe` 至 3.1.0 以修复潜在的原型污染风险 (CVE-XXXX)
-```
-
 ---
 
-## 5. 🎯 `minimal` 模版：极简轻量版
+## 6. 🎯 `minimal` 模版：极简轻量版
 
 ### 适用场景
 - Patch 小版本发布（如 `v1.0.1` ➔ `v1.0.2`）、日常高频发版、热修复（Hotfix）。
 - **受众**：只关心本次修了什么具体 Issue 或 PR 的用户。
 - **核心重点**：一行简明概括 + PR 与提交列表 + 对比链接，干净利落。
 
-### 结构范例
-```markdown
-## What's Changed in v1.0.2
-
-本次发布主要包含日常问题修复与稳定性改进：
-
-- fix(auth): 修复 Token 过期后偶发重定向循环问题 by @user1 in #45
-- fix(ui): 修复按钮在移动端点击响应延迟 by @user2 in #48
-- docs: 修正 README 中的环境变量配置示例 by @user3 in #49
-
-**Full Changelog**: https://github.com/org/repo/compare/v1.0.1...v1.0.2
-```
-
 ---
 
-## 💡 模版选择速查表
+## 🛡️ Monorepo 多包发版与 `--latest` 保护原则
 
-| 项目类型 / 场景 | 推荐使用的模版参数 | 核心关注点 |
-| :--- | :--- | :--- |
-| SaaS 网页应用 / 移动客户端 / 桌面端 | `--template product` | 核心体验、功能亮点、视觉变化、致谢 |
-| 开源类库 / 前后端框架 / 开发者 SDK | `--template sdk` | 破坏性变更置顶、代码调用示例、性能与类型 |
-| 命令行 / Docker / 基础设施组件 | `--template cli` | 一键安装更新命令、参数改动、校验和 |
-| 遵循 Keep-a-Changelog 的严谨开源工程 | `--template standard` | Added / Changed / Removed / Fixed 六分法 |
-| 日常修复 / 热修复 / Patch 小版本 | `--template minimal` | 极简提交与 PR 列表、Compare 链接 |
+在 Monorepo 仓库（如 pnpm workspace、Lerna、Nx）中，多包独立发版是常见场景：
+
+1. **Scoped Tags 严格隔离**：
+   - 必须通过作用域前缀隔离（如 `@scope/pkg@1.0.0`），脚本计算上一版本时仅在同前缀的 Tag 集合中检索。
+2. **`--latest` 徽标保护**：
+   - **主核心包**（如 `@antdv-next/x`、`vue`、`react`）发布时更新 `Latest` 徽标。
+   - **次级子包**（如 `@antdv-next/x-markdown`、`@antdv-next/x-sdk` 等衍生包）发布时，**必须显式指定 `--latest=false`**，避免次级包在 GitHub Release 页面抢占仓库主包的 `Latest` 徽标！
+3. **子目录过滤 (`--path`)**：
+   - 发布特定子包时，只抓取对该子包所在目录生效的代码改动，避免将整个仓库其他不相关的提交混入。

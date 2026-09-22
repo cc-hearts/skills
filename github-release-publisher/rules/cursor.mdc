@@ -1,5 +1,5 @@
 ---
-description: Draft and publish polished, audience-tailored GitHub Releases with 5 modern industry templates (product, sdk, cli, standard, minimal).
+description: Draft and publish polished, audience-tailored GitHub Releases with modern industry templates (bilingual, sdk, product, cli, standard, minimal), monorepo scoped tag awareness, and --latest protection.
 globs: *
 alwaysApply: false
 ---
@@ -9,13 +9,17 @@ alwaysApply: false
 When asked to draft, prepare, or publish a GitHub Release or update notes:
 
 ## 1. 确定目标受众与发布模版
-- **`product` (默认)**: Web 应用、SaaS、客户端。关注体验提升、新功能、贡献者致谢。
+- **`bilingual` (推荐/默认)**: 中英双语对照（`英文改动 — 中文说明`），适合 Ant Design / Vue 等开源生态，纯技术分类。
 - **`sdk`**: 开源库、SDK、框架。🚨 **破坏性变更与迁移指南置顶**、代码示例、性能与类型。
+- **`product`**: Web 应用、SaaS、客户端。关注体验提升、新功能、版本亮点与致谢。
 - **`cli`**: 命令行工具、Docker 镜像。📥 **一键安装升级命令**、参数配置变更、SHA-256 校验和。
 - **`standard`**: 遵循 Keep-a-Changelog (Added, Changed, Removed, Fixed)。
 - **`minimal`**: 日常 Bugfix、Patch 小版本、高频迭代。
 
-## 2. 核心要求
-- **禁止原始 Commit 堆砌**：将 Conventional Commits 转换为自然易读的读者语言。
+## 2. 核心要求与执行守则
+- **嗅探历史习惯**：优先查看前序 Release，对齐双语规范与分类习惯。
+- **禁止原始 Commit 堆砌**：将 Conventional Commits 转换为自然易读的读者语言与对应 PR。
 - **校验 Compare 链接**：确保对比链接格式为 `https://github.com/owner/repo/compare/<prevTag>...<version>`。
-- **醒目标记破坏性变更**：绝不隐匿破坏性改动。
+- **Monorepo Scoped Tags 隔离**：前序版本必须严格同作用域前缀，子包改动需做路径过滤。
+- **`--latest` 徽标保护**：Monorepo 次级子包发版必须显式指定 `--latest=false`，防止抢夺主包徽标。
+- **输出可执行命令**：生成文案的同时附带完整的 `gh release create` 命令，并在用户授权后协助执行。
