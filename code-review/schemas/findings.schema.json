@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "code-review/findings.schema.json",
+  "title": "Code Review findings (canonical, one model pass)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_id", "model", "pass", "findings"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "review_id": { "type": "string" },
+    "model": { "type": "string", "description": "Model id, e.g. codex or claude" },
+    "model_display": { "type": "string" },
+    "pass": { "enum": ["author", "verifier"] },
+    "generated_at": { "type": "string", "description": "ISO 8601 timestamp" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter"],
+      "properties": {
+        "adapter": { "type": "string" },
+        "raw_output": { "type": "string" },
+        "normalized_from": { "enum": ["json", "prose"] },
+        "normalized_by": { "type": ["string", "null"] }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "Findings that survived this pass's own rubric. Empty array when nothing qualifies. Never pad.",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "body", "category", "priority", "confidence", "code_location", "evidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string", "maxLength": 80, "description": "Imperative one-line claim, no rationale clause" },
+          "body": { "type": "string", "description": "One markdown paragraph: the demonstrable scenario and why it is wrong" },
+          "category": {
+            "enum": ["bug", "security", "regression", "error-handling", "silent-failure", "data-loss", "race-condition", "api-contract", "perf", "types", "tests", "comments", "guidelines", "simplification", "style-nits"]
+          },
+          "priority": { "type": "integer", "minimum": 0, "maximum": 3, "description": "0=P0 blocker, 1=P1 urgent, 2=P2 normal, 3=P3 low" },
+          "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "confidence_scale": { "type": "string" },
+          "code_location": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["relative_file_path", "line_range"],
+            "properties": {
+              "absolute_file_path": { "type": "string" },
+              "relative_file_path": { "type": "string" },
+              "line_range": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["start", "end"],
+                "properties": {
+                  "start": { "type": "integer", "minimum": 1 },
+                  "end": { "type": "integer", "minimum": 1 }
+                }
+              },
+              "overlaps_diff": { "type": "boolean" }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Concrete evidence: read call sites, commands run and their observed output"
+          },
+          "introduced_by_change": { "type": "boolean" },
+          "actionable": { "type": "boolean" },
+          "suggested_fix": { "type": ["string", "null"] },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "correctness": { "enum": ["patch is correct", "patch is incorrect"] },
+        "explanation": { "type": "string" },
+        "confidence": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "meta": { "type": "object" }
+  }
+}

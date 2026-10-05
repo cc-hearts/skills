@@ -1,0 +1,7 @@
+interface:
+  display_name: "Code Review"
+  short_description: "Cross-model code review with intensity levels and verified findings"
+  default_prompt: "Use $code-review to review my current changes; confirm intensity and participating models, then write the workspace under reviews/<id>/ and report verified findings by severity."
+
+policy:
+  allow_implicit_invocation: true

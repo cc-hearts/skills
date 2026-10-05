@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "code-review/task.schema.json",
+  "title": "Code Review task record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_id", "created_at", "intensity", "target", "models", "dimensions", "workspace", "dispatch_plan"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "review_id": { "type": "string" },
+    "created_at": { "type": "string" },
+    "intensity": { "enum": ["quick", "standard", "deep"] },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "repo_root"],
+      "properties": {
+        "kind": { "enum": ["uncommitted", "base", "commit", "pr", "paths"] },
+        "repo_root": { "type": "string" },
+        "base_ref": { "type": ["string", "null"] },
+        "head_ref": { "type": ["string", "null"] },
+        "merge_base_sha": { "type": ["string", "null"] },
+        "commit_sha": { "type": ["string", "null"] },
+        "pr_number": { "type": ["integer", "null"] },
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "resolution_note": { "type": "string" }
+      }
+    },
+    "diff": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "command": { "type": "string" },
+        "files_changed": { "type": "integer" },
+        "insertions": { "type": "integer" },
+        "deletions": { "type": "integer" },
+        "truncated": { "type": "boolean" },
+        "chunks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "adapter", "role"],
+        "properties": {
+          "id": { "type": "string" },
+          "display": { "type": "string" },
+          "adapter": { "enum": ["in-process", "codex-cli", "claude-cli", "seedmux", "manual"] },
+          "cli_model": { "type": ["string", "null"] },
+          "role": { "type": "array", "items": { "enum": ["author", "verifier"] } }
+        }
+      }
+    },
+    "cross_verification": { "type": "boolean" },
+    "dimensions": { "type": "array", "items": { "type": "string" } },
+    "rubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "threshold": { "type": "integer" },
+        "anchors": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "repo_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path"],
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string" }
+        }
+      }
+    },
+    "memory_entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path"],
+        "properties": {
+          "path": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "workspace": { "type": "string" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_budget_usd": { "type": "number" },
+        "timeout_seconds": { "type": "integer" },
+        "max_models": { "type": "integer" }
+      }
+    },
+    "dispatch_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["model", "adapter", "status"],
+        "properties": {
+          "model": { "type": "string" },
+          "adapter": { "type": "string" },
+          "status": { "enum": ["pending", "running", "done", "failed", "awaiting-handoff", "abandoned"] },
+          "duration_seconds": { "type": "number" },
+          "cost_usd": { "type": ["number", "null"] }
+        }
+      }
+    }
+  }
+}
