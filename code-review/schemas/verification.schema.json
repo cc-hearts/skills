@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "code-review/verification.schema.json",
+  "title": "Code Review verification results (one verifier on one author)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_id", "verifier_model", "author_model", "method", "results"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "review_id": { "type": "string" },
+    "verifier_model": { "type": "string" },
+    "author_model": { "type": "string" },
+    "method": { "enum": ["different-model", "independent-context", "empirical", "self"] },
+    "generated_at": { "type": "string" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_ref", "verdict", "confidence", "evidence"],
+        "properties": {
+          "finding_ref": { "type": "string", "description": "Finding id from the author's findings file" },
+          "verdict": { "enum": ["confirmed", "rejected", "uncertain"] },
+          "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "evidence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Required for confirmed and rejected: the line quoted, the command run and observed result, or the guard that disproves it"
+          },
+          "counter_evidence": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "confirmed": { "type": "integer" },
+        "rejected": { "type": "integer" },
+        "uncertain": { "type": "integer" }
+      }
+    }
+  }
+}

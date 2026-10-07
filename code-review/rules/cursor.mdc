@@ -1,0 +1,21 @@
+---
+description: Defect-first cross-model code review with selectable intensity and models; writes a reviews/<id>/ workspace with verified findings and a merged Markdown + JSON report.
+globs: *
+alwaysApply: false
+---
+
+# Code Review (Cursor Rule)
+
+When asked to review code, a diff, a PR, or "my changes":
+
+1. **Configure once**: intensity (quick / standard / deep) and participating models (single model, or several for cross-verification). Defaults: standard, current model.
+2. **Resolve the exact range**: compare through the merge base (`git merge-base HEAD <ref>` then `git diff <sha>`), never the raw branch tip. Include uncommitted changes when present. Record the resolved SHAs.
+3. **Create** `reviews/<yyyyMMdd-HHmm>-<slug>/` with `task.md`, `task.json`, `findings/`, `verification/`, `dispatch/`; make sure `reviews/` is ignored before any uncommitted-target work.
+4. **Review** with the dimensions from `references/review-protocol.md`; every finding carries file/line, P0–P3 severity, and confidence 0–100. Findings below 80 are counted, not reported.
+5. **Verify**: with 2+ models, each finding is checked by a different model with evidence (confirmed / uncertain / rejected). Never claim verification that did not happen.
+6. **Report**: `report.md` + `report.json` with three buckets — CONFIRMED / DISPUTED / UNVERIFIED — findings first, severity-ordered, `path:line` anchors.
+7. **Never modify the reviewed source.** Prefer no findings over weak findings.
+
+Cursor specifics: prefer terminal dispatch (`codex exec --output-schema …`, `claude -p --json-schema …`); if the terminal is unavailable, run single-model in-process and write `dispatch/<model>.handoff.md` for the second model.
+
+Full protocol: SKILL.md, `references/review-protocol.md`, `references/workspace-format.md`, `references/dispatch.md`.

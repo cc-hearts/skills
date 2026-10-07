@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "code-review/report.schema.json",
+  "title": "Code Review merged report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_id", "generated_at", "target", "intensity", "models", "counts", "buckets"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "review_id": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["uncommitted", "base", "commit", "pr", "paths"] },
+        "base_ref": { "type": ["string", "null"] },
+        "head_ref": { "type": ["string", "null"] },
+        "merge_base_sha": { "type": ["string", "null"] }
+      }
+    },
+    "intensity": { "enum": ["quick", "standard", "deep"] },
+    "models": { "type": "array", "items": { "type": "object" } },
+    "cross_verification": { "type": "boolean" },
+    "overall": { "type": "object" },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "confirmed", "disputed", "unverified"],
+      "properties": {
+        "total": { "type": "integer" },
+        "confirmed": { "type": "integer" },
+        "disputed": { "type": "integer" },
+        "unverified": { "type": "integer" },
+        "filtered": { "type": "integer" }
+      }
+    },
+    "by_priority": { "type": "object" },
+    "buckets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmed", "disputed", "unverified"],
+      "properties": {
+        "confirmed": { "type": "array", "items": { "type": "object" } },
+        "disputed": { "type": "array", "items": { "type": "object" } },
+        "unverified": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "dispatch_failures": { "type": "array", "items": { "type": "object" } },
+    "coverage": { "type": "object" },
+    "test_gaps": { "type": "array", "items": { "type": "string" } },
+    "residual_risks": { "type": "array", "items": { "type": "string" } },
+    "artifacts": { "type": "object" }
+  }
+}

@@ -15,6 +15,7 @@
 | [`qa-flow-review`](./qa-flow-review/) | **QA 视角端到端回归走查** | 开发完成 / 提测前 | 梳理变更影响面、发现遗漏的测试场景，输出高风险排查清单与潜在 Bug 预警。 |
 | [`design-system-forge`](./design-system-forge/) | **设计系统批量锻造** | 从 0 创建 / 品牌化定制 | 四问定参 + 推导链方法论（领地→主张→铁律→token→决策表→验证）+ 五件套样板工程（tokens/SKILL/verify/介绍页/README），强制 verify、反向测试与逐屏截图自查，支持纸感编辑风、冷静极简、高对比现代等风格批量产出。 |
 | [`business-component-design`](./business-component-design/) | **业务组件沙箱设计与副作用隔离 (Playground-Driven CDD)** | 业务组件开发 / 页面解耦重构 | 告别 Storybook/Vite 重型依赖绑架；倡导**纯净契约 + 本地交互式 Playground + 副作用隔离**。脱离真实接口与深层路由，先用 Mock 数据自测验证所有交互状态与 Emits，再轻薄装配到业务页面。 |
+| [`code-review`](./code-review/) | **跨模型缺陷优先代码审查** | 提交前 / 提 PR 前 / 需要第二意见 | 强度分级（quick/standard/deep）× 参评模型可选；≥2 模型自动交叉验证；产出 `reviews/<id>/` 工作区与 Markdown+JSON 报告，只报通过置信度 rubric 的发现（CONFIRMED/DISPUTED/UNVERIFIED 三桶）。 |
 
 ---
 
@@ -203,6 +204,25 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
 
 ---
 
+### 8. `code-review` (跨模型缺陷优先代码审查)
+- **多平台触发方式**：
+  - **Codex**: `$code-review`
+  - **Claude Code**: `/code-review`（个人技能按文档规则替换内置同名技能，内置别名 `/review` 不受影响）或自然语言
+  - **Cursor**: Composer 中 `@code-review` 或配合 `.cursor/rules/code-review.mdc` 自动触发
+  - **Antigravity / Gemini / 其它**: 自然语言直接调用
+- **推荐 Prompt**：
+  > “使用 code-review 审查当前改动，standard 强度，先只用一个模型；如果需要，再加 codex 做交叉验证。”
+- **预期行为**：
+  - **每次先配置**：目标范围（未提交/分支对比/commit/PR/路径）、强度（quick / standard / deep）、参评模型（当前模型 / codex CLI / claude CLI / seedmux pane / 手动接力；≥2 个自动交叉验证）。
+  - **merge-base 严谨取 diff**：不对裸分支 tip 直接 diff；有未提交改动自动并入范围。
+  - **产出 `reviews/<yyyyMMdd-HHmm>-<slug>/` 工作区**：`task.md`/`task.json`、`findings/<model>.json`、`verification/`、`report.md`、`report.json`，全程可审计、可 `--resume` 续跑。
+  - **只报通过置信度 rubric 的发现**：每条 finding 带 `path:line`、P0–P3 严重度、0–100 置信度；<80 只计数不报告；三桶分流（CONFIRMED / DISPUTED / UNVERIFIED）。
+  - **诚实降级**：没有可用的第二模型时自动单模型完成并明确标注；需要人工接力时生成 `dispatch/<model>.handoff.md`，结果落盘后 `--resume` 合并。绝不声称未发生的交叉验证。
+  - **只读**：绝不修改被审代码；修复请交给 `auto-cr-loop` 等工具。
+- **详细协议**：[review-protocol.md](./code-review/references/review-protocol.md)、[workspace-format.md](./code-review/references/workspace-format.md)、[dispatch.md](./code-review/references/dispatch.md)。
+
+---
+
 ## 🛠️ 结构规范与新增 Skill 指南
 
 如果你需要在此仓库中新增或维护自定义 Skill，每个 Skill 建议包含以下标准结构：
@@ -216,5 +236,6 @@ skills/<skill-name>/
 │   ├── cursor.mdc
 │   └── generic-agent-rule.md
 ├── scripts/             # [可选] 供 Agent 调用的可执行脚本（Node/Python/Shell）
-└── references/          # [可选] 详细的参考文档、跨语言反模式或检查清单（按需渐进加载，节省 Token）
+├── references/          # [可选] 详细的参考文档、跨语言反模式或检查清单（按需渐进加载，节省 Token）
+└── schemas/             # [可选] 静态 JSON Schema（供 schema 强制输出与跨工具校验，如 code-review）
 ```
