@@ -16,6 +16,7 @@
 | [`design-system-forge`](./design-system-forge/) | **设计系统批量锻造** | 从 0 创建 / 品牌化定制 | 四问定参 + 推导链方法论（领地→主张→铁律→token→决策表→验证）+ 五件套样板工程（tokens/SKILL/verify/介绍页/README），强制 verify、反向测试与逐屏截图自查，支持纸感编辑风、冷静极简、高对比现代等风格批量产出。 |
 | [`business-component-design`](./business-component-design/) | **业务组件沙箱设计与副作用隔离 (Playground-Driven CDD)** | 业务组件开发 / 页面解耦重构 | 告别 Storybook/Vite 重型依赖绑架；倡导**纯净契约 + 本地交互式 Playground + 副作用隔离**。脱离真实接口与深层路由，先用 Mock 数据自测验证所有交互状态与 Emits，再轻薄装配到业务页面。 |
 | [`code-review`](./code-review/) | **跨模型缺陷优先代码审查** | 提交前 / 提 PR 前 / 需要第二意见 | 强度分级（quick/standard/deep）× 参评模型可选；≥2 模型自动交叉验证；产出 `reviews/<id>/` 工作区与 Markdown+JSON 报告，只报通过置信度 rubric 的发现（CONFIRMED/DISPUTED/UNVERIFIED 三桶）。 |
+| [`mygo-acrylic`](./mygo-acrylic/) | **mygo 原生 UI 的亚克力（磨砂）外观与组件库** | 新建 mygo 应用 / 改造现有界面 / 排查实心底抠穿 | 三层模型（系统材质薄纱窗口底 + 可调透明度工作卡 + 实色浮层）+ 洗色阶梯；自带经测试的 Go 组件库与样板间，品红压力截图与静态守则测试双重把关，从 Gloss 实战提炼、逐值验证。 |
 
 ---
 
@@ -220,6 +221,19 @@ ln -sfn /Users/carl/Desktop/carl-github/skills/code-simplifier/rules/cursor.mdc 
   - **诚实降级**：没有可用的第二模型时自动单模型完成并明确标注；需要人工接力时生成 `dispatch/<model>.handoff.md`，结果落盘后 `--resume` 合并。绝不声称未发生的交叉验证。
   - **只读**：绝不修改被审代码；修复请交给 `auto-cr-loop` 等工具。
 - **详细协议**：[review-protocol.md](./code-review/references/review-protocol.md)、[workspace-format.md](./code-review/references/workspace-format.md)、[dispatch.md](./code-review/references/dispatch.md)。
+
+### 9. `mygo-acrylic` (mygo 亚克力外观与组件库)
+- **多平台触发方式**：
+  - **Codex**: `$mygo-acrylic`
+  - **Claude Code / Antigravity**: 自然语言调用，或“这个 mygo 界面改成亚克力 / 毛玻璃”
+  - **Cursor / Windsurf / Cline**: 引用 `rules/` 下对应规则文件唤起
+- **推荐 Prompt**：
+  > “使用 mygo-acrylic 给我的 mygo 应用做一个磨砂窗口外壳，加上背景透明度和模糊档位两项设置。”
+- **预期行为**：
+  - **三层模型**：窗口底 = 系统材质（macOS / Windows 11）+ 主题色 65% 薄纱；工作卡 = 卡片色 × 用户不透明度（30%~100%）；浮层、模态、代码画布保持实色。
+  - **洗色阶梯**：卡片与侧栏上的控件只用半透明洗色（悬停 / 静息 / 选中三档），不透明的面一律不许铺进来 —— 卡片一透就会抠出实心挡板。
+  - **开箱组件库**：`assets/acrylic/` 是一个可直接复制进项目的 Go 包（按钮、分段、搜索框、勾选框、芯片、列表行、条带、分隔条、模态、样板间），自带色阶、对比度、像素级「透不透」测试与静态守则。
+  - **强制质检**：品红窗口底 + 30% 卡片的压力截图逐视图自查；静态守则测试 + 反向测试；改造现有项目按 [refactor-playbook.md](./mygo-acrylic/references/refactor-playbook.md) 盘点 → 分类 → 映射。
 
 ---
 
